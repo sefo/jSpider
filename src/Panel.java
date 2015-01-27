@@ -1,6 +1,7 @@
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -28,17 +29,20 @@ public class Panel extends JPanel {
 		add(labelURL, c);
 		c.gridx = 1;
 		c.gridy = 0;
+		c.weightx = 0.5;
 		JTextField url = new JTextField("http://");
 		url.setColumns(100);
 		add(url, c);
 		c.gridx = 2;
 		c.gridy = 0;
+		c.weightx = 0;
 		JButton scan = new JButton("Scan"); 
 		add(scan, c);
 		c.gridwidth = 3;
 		c.gridx = 0;
 		c.gridy = 1;
-		model = new DefaultTableModel(data, columns); //mettre en static pour acces facile???
+		c.insets = new Insets(15,0,0,0);
+		model = new DefaultTableModel(data, columns);
 		JTable results = new JTable(model);
 		results.setPreferredSize(new Dimension(600, 500));
 		JScrollPane scrollPane = new JScrollPane(results);
@@ -49,8 +53,6 @@ public class Panel extends JPanel {
                 Jspider.scanURL(url.getText(), "dico.txt");
             }
         });
-		//String[] row = {"/foo", "404", "45645"};
-		//model.addRow(row);
 	}
 
 	public DefaultTableModel getModel() {
