@@ -2,8 +2,6 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
-
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
@@ -11,6 +9,7 @@ import javax.swing.SwingUtilities;
 public class Jspider extends JFrame implements Runnable {
 	private static final long serialVersionUID = 1L;
 	private static Panel panel = new Panel();
+	private static boolean running = false;
 
 	public Jspider() {
 	}
@@ -42,23 +41,26 @@ public class Jspider extends JFrame implements Runnable {
 	}
 
 	public static void scanURL(String url, String dictionary) {
-		Sender sender = new Sender(url);
-		System.out.println(Arrays.toString(sender.getResults()));
+		Sender sender = new Sender(url, panel);
+		sender.start();
 		try {
 			FileInputStream fis = new FileInputStream(dictionary);
 			BufferedReader br = new BufferedReader(new InputStreamReader(fis));
 			String line = null;
-			while ((line = br.readLine()) != null) {
-				sender = new Sender(url + line);
-				if(sender.getResults() != null) {
-					System.out.println(Arrays.toString(sender.getResults()));//override toString() to display nice results
-					panel.getModel().addRow(sender.getResults());
-				}
+			running = true;
+			while ((line = br.readLine()) != null && running) {
+				sender = new Sender(url + line, panel);
+				sender.start();
 			}
 			br.close();
 		} catch(IOException e) {
 			System.out.println("Dictionary file error");
 		}
 	}
+
+	public static void setRunning(boolean running) {
+		Jspider.running = running;
+	}
+	
 
 }

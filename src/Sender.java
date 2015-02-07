@@ -4,15 +4,18 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
 
-public class Sender {
+public class Sender extends Thread {
 	private String userAgent = "Mozilla/5.0";
 	private URL lookupURL = null;
 	private String[] results = new String[3];
+	private Panel panel;
 	
 	public Sender() {}
 	
-	public Sender(String url) {
+	public Sender(String url, Panel panel) {
+		this.panel = panel;
 		if(!url.endsWith("/"))
 			url += "/";
 		try {
@@ -20,7 +23,15 @@ public class Sender {
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void run() {
 		setResults(sendGet(lookupURL));
+		if(getResults() != null) {
+			System.out.println(Arrays.toString(getResults()));
+			panel.getModel().addRow(getResults());
+			panel.repaint();
+		}
 	}
 	
 	public String[] sendGet(URL startUrl) {

@@ -30,7 +30,7 @@ public class Panel extends JPanel {
 		c.gridx = 1;
 		c.gridy = 0;
 		c.weightx = 0.5;
-		JTextField url = new JTextField("http://");
+		JTextField url = new JTextField("http://www.");
 		url.setColumns(100);
 		add(url, c);
 		c.gridx = 2;
@@ -38,9 +38,24 @@ public class Panel extends JPanel {
 		c.weightx = 0;
 		JButton scan = new JButton("Scan"); 
 		add(scan, c);
-		c.gridwidth = 3;
+		c.gridwidth = 1;
 		c.gridx = 0;
 		c.gridy = 1;
+		JTextField status = new JTextField("stopped");
+		add(status, c);
+		c.gridwidth = 1;
+		c.gridx = 1;
+		c.gridy = 1;
+		JTextField dico = new JTextField("dico.txt");
+		add(dico, c);
+		c.gridwidth = 1;
+		c.gridx = 2;
+		c.gridy = 1;
+		JButton stop = new JButton("Stop");
+		add(stop, c);
+		c.gridwidth = 3;
+		c.gridx = 0;
+		c.gridy = 2;
 		c.insets = new Insets(15,0,0,0);
 		model = new DefaultTableModel(data, columns);
 		JTable results = new JTable(model);
@@ -50,7 +65,15 @@ public class Panel extends JPanel {
         scan.addActionListener(new ActionListener() {
         	@Override
             public void actionPerformed(ActionEvent e) {
-                Jspider.scanURL(url.getText(), "dico.txt");
+                Jspider.scanURL(url.getText(), dico.getText());
+                status.setText("started");
+            }
+        });
+        stop.addActionListener(new ActionListener() {
+        	@Override
+            public void actionPerformed(ActionEvent e) {
+                Jspider.setRunning(false);
+                status.setText("stopped");
             }
         });
 	}
